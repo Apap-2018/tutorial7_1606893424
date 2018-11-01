@@ -1,4 +1,4 @@
-package com.apap.tutorial6.model;
+package com.apap.tutorial7.model;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -53,7 +54,7 @@ public class FlightModel implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "pilot_licenseNumber", referencedColumnName = "license_number")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+    @JsonIgnoreProperties(ignoreUnknown=true)
     private PilotModel pilot;
 
     /**

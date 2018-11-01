@@ -1,4 +1,4 @@
-package com.apap.tutorial6.model;
+package com.apap.tutorial7.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,8 +39,7 @@ public class PilotModel implements Serializable {
     @Column(name = "fly_hour", nullable = false)
     private int flyHour;
     
-    @OneToMany(mappedBy = "pilot", fetch = FetchType.LAZY)
-    private List<FlightModel> listFlight = new ArrayList<FlightModel>();
+    
 
     /**
      * @param id the id to set
@@ -66,12 +65,7 @@ public class PilotModel implements Serializable {
     public void setFlyHour(int flyHour) {
         this.flyHour = flyHour;
     }
-    /**
-     * @param listFlight the listFlight to set
-     */
-    public void setListFlight(List<FlightModel> listFlight) {
-        this.listFlight = listFlight;
-    }
+    
 
     /**
      * @return the id
@@ -97,10 +91,5 @@ public class PilotModel implements Serializable {
     public int getFlyHour() {
         return flyHour;
     }
-    /**
-     * @return the listFlight
-     */
-    public List<FlightModel> getListFlight() {
-        return listFlight;
-    }
+   
 }

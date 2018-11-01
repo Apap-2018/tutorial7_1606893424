@@ -1,11 +1,12 @@
-package com.apap.tutorial6.repository;
+package com.apap.tutorial7.repository;
 
+import java.util.List;
 import java.util.Optional;
-
-import com.apap.tutorial6.model.FlightModel;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.apap.tutorial7.model.FlightModel;
 
 /**
  * FlightDb
@@ -13,6 +14,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FlightDb extends JpaRepository<FlightModel, Long> {
     void deleteByFlightNumber(String flightNumber);
+    void deleteById(long id);
 
     Optional<FlightModel> findByFlightNumber(String flightNumber);
+    Optional<FlightModel> findById(long id);
+    
+    List<FlightModel> findAll();
 }

@@ -1,35 +1,48 @@
-package com.apap.tutorial6.controller;
+package com.apap.tutorial7.controller;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.sql.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.apap.tutorial6.model.FlightModel;
-import com.apap.tutorial6.model.PilotModel;
-import com.apap.tutorial6.service.FlightService;
-import com.apap.tutorial6.service.PilotService;
+import com.apap.tutorial7.model.FlightModel;
+import com.apap.tutorial7.model.PilotModel;
+import com.apap.tutorial7.rest.Setting;
+import com.apap.tutorial7.service.FlightService;
+import com.apap.tutorial7.service.PilotService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * FlightController
  */
-@Controller
+@RestController
+@RequestMapping("/flight")
 public class FlightController {
     @Autowired
     private FlightService flightService;
     
     @Autowired
     private PilotService pilotService;
-
+    
+    /*
     @RequestMapping(value = "/flight/add/{licenseNumber}", method = RequestMethod.GET)
     private String add(@PathVariable(value = "licenseNumber") String licenseNumber, Model model) {
         PilotModel pilot = pilotService.getPilotDetailByLicenseNumber(licenseNumber).get();
@@ -99,4 +112,76 @@ public class FlightController {
         flightService.addFlight(flight);
         return flight;
     }
+    
+    */
+    
+    @PostMapping(value = "/add")
+    private FlightModel addFlightSubmit(@RequestBody FlightModel flight) {
+        
+        return flightService.addFlight(flight);
+        
+    }
+    
+    
+    @GetMapping(value = "/view/{flightNumber}")
+    private FlightModel flightView(@PathVariable("flightNumber") String flightNumber) {
+    	FlightModel flight=flightService.getFlightDetailByFlightNumber(flightNumber).get();
+        return flight;
+    }
+    
+    
+    @DeleteMapping(value = "/delete/{flightId}")
+    private String deleteFlight(@PathVariable("flightId") long flightId) {
+        
+        flightService.deleteByFlightId(flightId);
+        return "flight has been deleted";
+    }
+	
+    
+    
+    
+    @PutMapping(value = "/update/{flightId}")
+    private String updateFlightSubmit(@PathVariable("flightId") long flightId,@RequestParam("destination") String destination,@RequestParam("origin") String origin ,@RequestParam("time") Date time) {
+        //PilotModel pilot=pilotService.getPilotDetailById(pilotId).get();
+    	FlightModel flight=flightService.getFlightDetailByFlightId(flightId).get();
+        
+        if(flight.equals(null)) {
+        	return "Couldn't find your flight";
+        }
+        
+      
+        flight.setDestination(destination);
+        flight.setOrigin(origin);
+        flight.setTime(time);
+         
+        flightService.addFlight(flight);
+        return "flight update success";
+        	
+    }
+    
+    @GetMapping(value = "/all")
+    private List<FlightModel> flightViewall() {
+    	
+    	List<FlightModel> listFlight=flightService.getAll();
+    	
+        return listFlight;
+    }
+    
+    @Autowired
+    RestTemplate restTemplate;
+    
+    @Bean
+    public RestTemplate restAirport() {
+    	return new RestTemplate();
+    }
+    
+    @GetMapping(value="/airport/{kota}")
+    public String getAirport(@PathVariable("kota") String kota) throws Exception {
+        String path = Setting.airportUrl + kota;
+        return restTemplate.getForEntity(path, String.class).getBody();
+    }
+    
+    
+    
+    
 }
