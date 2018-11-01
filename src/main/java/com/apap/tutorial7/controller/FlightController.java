@@ -142,7 +142,7 @@ public class FlightController {
     
     @PutMapping(value = "/update/{flightId}")
     private String updateFlightSubmit(@PathVariable("flightId") long flightId,@RequestParam("destination") String destination,@RequestParam("origin") String origin ,@RequestParam("time") Date time) {
-        //PilotModel pilot=pilotService.getPilotDetailById(pilotId).get();
+       
     	FlightModel flight=flightService.getFlightDetailByFlightId(flightId).get();
         
         if(flight.equals(null)) {
