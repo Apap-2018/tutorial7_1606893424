@@ -44,9 +44,9 @@ public class PilotController {
 
     @GetMapping(value = "/view/{licenseNumber}")
     private PilotModel pilotView(@PathVariable("licenseNumber") String licenseNumber) {
-        //Optional<PilotModel> archivePilot = pilotService.getPilotDetailByLicenseNumber(licenseNumber);
+        
         PilotModel pilot=pilotService.getPilotDetailByLicenseNumber(licenseNumber).get();
-        //return archivePilot.get();
+        
         return pilot;
     }
     
